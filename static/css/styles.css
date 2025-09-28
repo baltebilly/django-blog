@@ -1,0 +1,173 @@
+:root {
+
+  --primary: #38a596;
+  --secondary: #90c9c9;
+  --accent: #26727f;
+  --bg-light: #e7eeea;
+}
+
+/* General */
+body {
+  background-color: var(--bg-light);
+  font-family: "Segoe UI", sans-serif;
+  color: #333;
+}
+
+/* Navbar */
+.navbar {
+  background-color: var(--primary) !important;
+}
+.navbar-brand{
+  margin-left: 100px;
+
+}
+
+.navbar-brand,
+.navbar-nav .nav-link {
+  color: white !important;
+  font-weight: 500;
+}
+
+.navbar-nav .nav-link:hover {
+  color: var(--bg-light) !important;
+}
+
+/* Cards */
+.card {
+  border: none;
+  background-color: #fff;
+  border-radius: 15px;
+  transition: transform 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+.card:hover {
+  transform: translateY(-3px);
+}
+
+.card-header {
+  background-color: var(--secondary);
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Links */
+a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--secondary);
+}
+
+/* Buttons */
+.btn-custom {
+  background-color: var(--secondary);
+  border: none;
+  color: #fff;
+  font-weight: 500;
+  padding: 0.5rem 1.2rem;
+  border-radius: 10px;
+  transition: 0.3s ease;
+}
+
+.btn-custom:hover {
+  background-color: var(--primary);
+  color: #fff;
+}
+
+.btn-secondary {
+  background-color: var(--accent);
+  border: none;
+  color: #333;
+}
+
+.btn-secondary:hover {
+  background-color: var(--secondary);
+  color: #fff;
+}
+
+/* Footer */
+footer {
+  background-color: var(--primary);
+  color: white;
+}
+footer a {
+  color: white;
+}
+footer a:hover {
+  color: var(--bg-light);
+}
+
+/* Login/Register Card Styling */
+  .login-card {
+  width: 500px;   /* same as login */
+  max-width: 100%;
+  margin-top: 50px;
+  border-radius: 1rem;
+  padding: 2rem;
+  background-color: #fff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.7);
+}
+
+.login-card .card-header {
+  background-color: #819A91; /* matches your palette */
+  color: #fff;
+  font-weight: bold;
+}
+
+.login-card .btn-primary {
+  background-color: #A7C1A8;
+  border: none;
+}
+
+.login-card .btn-success {
+  background-color: #819A91;
+  border: none;
+}
+
+.login-card input {
+  width: 100%; /* Input spans full card width */
+}
+
+/* Custom input fields */
+.custom-input {
+  border-radius: 0.5rem;
+  border: 1px solid #A7C1A8;
+  padding: 0.6rem 0.8rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.custom-input:focus {
+  border-color: #819A91;
+  box-shadow: 0 0 0 0.2rem rgba(129, 154, 145, 0.25);
+}
+
+/* Buttons */
+.btn-custom {
+  background-color: #819A91;
+  border: none;
+  color: #fff;
+  border-radius: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  font-weight: 500;
+  transition: background-color 0.3s;
+}
+
+.btn-custom:hover {
+  background-color: #6a837a;
+}
+
+.btn-cancel {
+  background-color: #D1D8BE;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.btn-cancel:hover {
+  background-color: #c1c9a8;
+}

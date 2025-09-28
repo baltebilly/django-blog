@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="card shadow-sm p-4 mb-4">
+    <!-- Post Title -->
+    <h2 class="mb-3">{{ post.title }}</h2>
+
+    <!-- Meta -->
+    <p class="text-muted">
+      By <strong>{{ post.author }}</strong> — {{ post.created|date:"M d, Y H:i" }}
+    </p>
+
+    <!-- Body -->
+    <div class="mb-4">
+      {{ post.content|linebreaks }}
+    </div>
+
+    <!-- Actions (only for authenticated users who are the author) -->
+    {% if user.is_authenticated and user == post.author %}
+      <div class="d-flex gap-3 mb-3">
+        <a href="{% url 'post_update' post.pk %}" class="btn btn-outline-primary">Update</a>
+        <a href="{% url 'post_delete' post.pk %}" class="btn btn-delete">Delete</a>
+      </div>
+    {% endif %}
+
+    <!-- Back button -->
+    <a href="{% url 'post_list' %}" class="btn btn-cancel">← Back to all posts</a>
+  </div>
+{% endblock %}
