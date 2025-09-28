@@ -1,5 +1,5 @@
-````markdown
-# 📝 Django Mini Blog
+markdown
+📝 Django Mini Blog
 
 A beginner-friendly **Django blog app** built while learning Django step by step.  
 Features include:
@@ -9,9 +9,7 @@ Features include:
 - Pagination
 - Django admin for post management
 
----
-
-## 🚀 Getting Started
+🚀 Getting Started
 
 ### 1. Clone the repo
 ```bash
