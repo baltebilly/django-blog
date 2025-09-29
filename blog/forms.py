@@ -1,6 +1,13 @@
 from django import forms
-from .models import Post
-from .models import Profile
+from .models import Post, Profile, Comment
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ["content"]
+        widgets = {
+            "content": forms.Textarea(attrs={"rows": 3, "class": "form-control", "placeholder": "Write a comment..."}),
+        }
 
 class ProfileForm(forms.ModelForm):
     class Meta:
@@ -44,10 +51,11 @@ class ProfileForm(forms.ModelForm):
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ["title", "content", "published"]
+        fields = ["title", "content", "image", "published"]
         widgets = {
             "title": forms.TextInput(attrs={"class": "form-control"}),
             "content": forms.Textarea(attrs={"class": "form-control", "rows": 5}),
+            "image": forms.ClearableFileInput(attrs={"class": "form-control-file"}),
             "published": forms.CheckboxInput(attrs={"class": "form-check-input"}),
         }
         labels = {

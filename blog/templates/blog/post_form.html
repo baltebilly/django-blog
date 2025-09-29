@@ -5,7 +5,9 @@
     <h2 class="mb-4">
       {% if post %}✏️ Edit Post{% else %}➕ New Post{% endif %}
     </h2>
-    <form method="post">
+
+    <!-- ✅ enctype added for file uploads -->
+    <form method="post" enctype="multipart/form-data">
       {% csrf_token %}
       
       <!-- Loop through form fields -->
@@ -24,7 +26,8 @@
 
       <div class="d-flex justify-content-between">
         <a href="{% url 'post_list' %}" class="btn btn-secondary">← Cancel</a>
-        <a href="{% url 'post_list' %}"><button class="btn btn-custom" type="submit">💾 Save</button></a>
+        <!-- ✅ proper submit button -->
+        <button class="btn btn-custom" type="submit">💾 Save</button>
       </div>
     </form>
   </div>

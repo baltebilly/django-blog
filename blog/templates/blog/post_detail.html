@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-
 {% load static %}
 
 {% block content %}
@@ -20,23 +19,178 @@
              class="rounded-circle me-2 shadow-sm"
              width="40" height="40" style="object-fit: cover;">
       {% endif %}
-      <strong> {{ post.author }} </strong> - {{ post.created|date:"M d, Y H:i" }}
+      <strong>{{ post.author }}</strong> — {{ post.created|date:"M d, Y H:i" }}
     </p>
+
+    <!-- Optional Post Image -->
+    {% if post.image %}
+      <div class="mb-4">
+        <img src="{{ post.image.url }}" 
+             alt="Post image"
+             class="img-fluid rounded shadow-sm w-100"
+             style="max-height: 350px; object-fit: cover;">
+      </div>
+    {% endif %}
 
     <!-- Body -->
     <div class="mb-4">
       {{ post.content|linebreaks }}
     </div>
 
+    <!-- Likes -->
+    <div class="mb-3">
+      {% if user.is_authenticated %}
+        <button id="like-btn" 
+                data-url="{% url 'ajax_post_like' post.pk %}" 
+                class="btn {% if is_liked %}btn-danger{% else %}btn-outline-danger{% endif %}">
+          ❤️ Like (<span id="like-count">{{ total_likes }}</span>)
+        </button>
+      {% else %}
+        <p><a href="{% url 'login' %}">Login</a> to like this post.</p>
+      {% endif %}
+    </div>
+
+    <!-- Comments -->
+    <div class="mt-4">
+      <h5>Comments (<span id="comment-count">{{ comments.count }}</span>)</h5>
+      <hr>
+      <div id="comment-list">
+        {% for comment in comments %}
+          <div class="mb-3 comment-item">
+            <strong>{{ comment.user.username }}</strong>
+            <small class="text-muted">{{ comment.created|date:"M d, Y H:i" }}</small>
+            <p>{{ comment.content }}</p>
+
+            {% if user == comment.user %}
+              <button class="btn btn-sm btn-outline-danger delete-comment" 
+                      data-url="{% url 'ajax_delete_comment' comment.pk %}">
+                Delete
+              </button>
+            {% endif %}
+          </div>
+        {% empty %}
+          <p id="no-comments">No comments yet. Be the first!</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    {% if user.is_authenticated %}
+      <form id="comment-form" data-url="{% url 'ajax_post_comment' post.pk %}" class="mt-3">
+        {% csrf_token %}
+        <textarea name="content" class="form-control mb-2" rows="3" placeholder="Write a comment..."></textarea>
+        <button type="submit" class="btn btn-primary">Add Comment</button>
+      </form>
+    {% else %}
+      <p><a href="{% url 'login' %}">Login</a> to comment.</p>
+    {% endif %}
+
     <!-- Actions (only for authenticated users who are the author) -->
     {% if user.is_authenticated and user == post.author %}
-      <div class="d-flex gap-3 mb-3">
+      <div class="d-flex gap-3 mt-4">
         <a href="{% url 'post_update' post.pk %}" class="btn btn-outline-primary">Update</a>
         <a href="{% url 'post_delete' post.pk %}" class="btn btn-delete">Delete</a>
       </div>
     {% endif %}
 
     <!-- Back button -->
-    <a href="{% url 'post_list' %}" class="btn btn-cancel">← Back to all posts</a>
+    <a href="{% url 'post_list' %}" class="btn btn-cancel mt-3">← Back to all posts</a>
   </div>
+
+  <!-- AJAX Script -->
+  <script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // ================= LIKE BUTTON =================
+    const likeBtn = document.getElementById("like-btn");
+    if (likeBtn) {
+      likeBtn.addEventListener("click", function() {
+        fetch(likeBtn.dataset.url, {
+          method: "POST",
+          headers: {
+            "X-CSRFToken": "{{ csrf_token }}",
+            "X-Requested-With": "XMLHttpRequest"
+          }
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.liked) {
+            likeBtn.classList.remove("btn-outline-danger");
+            likeBtn.classList.add("btn-danger");
+          } else {
+            likeBtn.classList.remove("btn-danger");
+            likeBtn.classList.add("btn-outline-danger");
+          }
+          document.getElementById("like-count").textContent = data.total_likes;
+        });
+      });
+    }
+
+    // ================= COMMENT FORM =================
+    const commentForm = document.getElementById("comment-form");
+    if (commentForm) {
+      commentForm.addEventListener("submit", function(e) {
+        e.preventDefault();
+        const formData = new FormData(commentForm);
+
+        fetch(commentForm.dataset.url, {
+          method: "POST",
+          headers: {
+            "X-CSRFToken": "{{ csrf_token }}",
+            "X-Requested-With": "XMLHttpRequest"
+          },
+          body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (!data.error) {
+            const commentList = document.getElementById("comment-list");
+            const noComments = document.getElementById("no-comments");
+            if (noComments) noComments.remove();
+
+            const newComment = document.createElement("div");
+            newComment.classList.add("mb-3", "comment-item");
+            newComment.innerHTML = `
+              <strong>${data.username}</strong>
+              <small class="text-muted">${data.created}</small>
+              <p>${data.content}</p>
+              <button class="btn btn-sm btn-outline-danger delete-comment" data-url="/comment/${data.id}/delete/">Delete</button>
+            `;
+            commentList.prepend(newComment);
+
+            // clear textarea
+            commentForm.querySelector("textarea").value = "";
+
+            // update count
+            const countEl = document.getElementById("comment-count");
+            countEl.textContent = parseInt(countEl.textContent) + 1;
+          }
+        });
+      });
+    }
+
+    // ================= DELETE COMMENT =================
+    document.addEventListener("click", function(e) {
+      if (e.target.classList.contains("delete-comment")) {
+        const url = e.target.dataset.url;
+        const commentEl = e.target.closest(".comment-item");
+
+        fetch(url, {
+          method: "POST",
+          headers: {
+            "X-CSRFToken": "{{ csrf_token }}",
+            "X-Requested-With": "XMLHttpRequest"
+          }
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.deleted) {
+            commentEl.remove();
+            // update count
+            const countEl = document.getElementById("comment-count");
+            countEl.textContent = parseInt(countEl.textContent) - 1;
+          }
+        });
+      }
+    });
+  });
+  </script>
 {% endblock %}

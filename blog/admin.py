@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Post, Profile
+from .models import Post, Profile, Comment, Like
 
 
 class PostAdmin(admin.ModelAdmin):
@@ -20,7 +20,11 @@ class PostAdmin(admin.ModelAdmin):
         
     )
 
-    
+admin.site.site_header = "Blog Administration"
+admin.site.site_title = "Blog Admin Portal"
+admin.site.index_title = "Welcome to the Blog Admin Area"
+admin.site.register(Comment)
+admin.site.register(Like)
 admin.site.register(Profile)
 admin.site.register(Post, PostAdmin)
 
