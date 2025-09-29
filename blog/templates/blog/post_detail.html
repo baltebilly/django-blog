@@ -1,13 +1,26 @@
 {% extends 'base.html' %}
 
+{% load static %}
+
 {% block content %}
   <div class="card shadow-sm p-4 mb-4">
     <!-- Post Title -->
     <h2 class="mb-3">{{ post.title }}</h2>
 
-    <!-- Meta -->
-    <p class="text-muted">
-      By <strong>{{ post.author }}</strong> — {{ post.created|date:"M d, Y H:i" }}
+    <!-- Meta with author picture -->
+    <p class="text-muted d-flex align-items-center">
+      {% if post.author.profile.avatar %}
+        <img src="{{ post.author.profile.avatar.url }}" 
+             alt="{{ post.author.username }}'s avatar"
+             class="rounded-circle me-2 shadow-sm"
+             width="40" height="40" style="object-fit: cover;">
+      {% else %}
+        <img src="{% static 'profile_pics/default.webp' %}" 
+             alt="Default avatar"
+             class="rounded-circle me-2 shadow-sm"
+             width="40" height="40" style="object-fit: cover;">
+      {% endif %}
+      <strong> {{ post.author }} </strong> - {{ post.created|date:"M d, Y H:i" }}
     </p>
 
     <!-- Body -->

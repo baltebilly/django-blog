@@ -1,10 +1,34 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Post
 from django.contrib.auth.decorators import login_required
-from .forms import PostForm
+from .forms import PostForm, ProfileForm
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from django.core.paginator import Paginator
+
+@login_required
+def profile_view(request):
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, request.FILES, instance=request.user.profile)
+        if form.is_valid():
+            form.save()
+            return redirect('profile_detail')
+    else:
+        form = ProfileForm(instance=request.user.profile)
+    return render(request, 'blog/profile.html', {'form': form})
+
+@login_required
+def edit_profile(request):  
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, request.FILES, instance=request.user.profile)
+        if form.is_valid():
+            form.save()
+            return redirect("profile_detail")
+
+
+    else:
+        form = ProfileForm(instance=request.user.profile)
+    return render(request, 'blog/edit_profile.html', {'form': form})
 
 def register(request):
     if request.method == 'POST':
@@ -12,7 +36,7 @@ def register(request):
         if form.is_valid():
             user = form.save()
             login(request, user)  # log the new user in
-            return redirect('post_list')
+            return redirect('profile_detail')  # redirect to profile page after registration
     else:
         form = UserCreationForm()
     return render(request, 'registration/register.html', {'form': form})

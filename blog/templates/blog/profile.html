@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+
+      <div class="card shadow-lg border-0 rounded-4 p-4">
+        <div class="card-body text-center">
+
+          <!-- Profile Picture (with default fallback) -->
+          <div class="mb-4">
+            {% if user.profile.avatar and user.profile.avatar.url %}
+            <img src="{{ user.profile.avatar.url }}" 
+                class="rounded-circle" width="150" height="150" style="object-fit: cover;">
+            {% else %}
+            <img src="{{ MEDIA_URL }}avatar/default.jpg" 
+                class="rounded-circle" width="150" height="150" style="object-fit: cover;">
+            {% endif %}
+
+          </div>
+
+          <!-- Username -->
+          <h2 class="fw-bold mb-1" style="font-family: 'Poppins', sans-serif;">
+            {{ user.username }}
+          </h2>
+          <p class="text-muted mb-3" style="font-family: 'Roboto Mono', monospace;">
+            @{{ user.username }}
+          </p>
+
+          <!-- Bio -->
+          <p class="card-text text-center px-4 mb-4" style="font-family: 'Open Sans', sans-serif; font-size: 1rem; line-height: 1.6;">
+            {% if user.profile.bio %}
+              {{ user.profile.bio }}
+            {% else %}
+              <em>No bio yet. Add something about yourself!</em>
+            {% endif %}
+          </p>
+
+          <hr class="my-4">
+
+          <!-- Other Profile Info -->
+          <div class="text-start ps-4 pe-4" style="font-family: 'Open Sans', sans-serif; font-size: 0.95rem;">
+            <ul class="list-unstyled">
+              {% if user.profile.website %}
+                <li class="mb-2"><strong>🌐 Website:</strong> <a href="{{ user.profile.website }}" target="_blank">{{ user.profile.website }}</a></li>
+              {% endif %}
+              {% if user.profile.location %}
+                <li class="mb-2"><strong>📍 Location:</strong> {{ user.profile.location }}</li>
+              {% endif %}
+              {% if user.profile.birth_date %}
+                <li class="mb-2"><strong>🎂 Birth Date:</strong> {{ user.profile.birth_date|date:"M d, Y" }}</li>
+              {% endif %}
+            </ul>
+          </div>
+
+          <!-- Edit Profile Button -->
+          <div class="mt-4">
+            <a href="{% url 'edit_profile' %}" class="btn btn-primary px-5 py-2 rounded-pill shadow-sm">
+              ✏️ Edit Profile
+            </a>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

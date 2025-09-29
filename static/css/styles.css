@@ -171,3 +171,36 @@ footer a:hover {
 .btn-cancel:hover {
   background-color: #c1c9a8;
 }
+/* Profile Card */
+.card {
+  background-color: #EEEFE0; /* soft background */
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.card-title {
+  color: #819A91;
+  font-weight: bold;
+}
+
+.btn-primary {
+  background-color: #819A91;
+  border-color: #819A91;
+}
+
+.btn-primary:hover {
+  background-color: #A7C1A8;
+  border-color: #A7C1A8;
+}
+
+.card h2 {
+  letter-spacing: 0.5px;
+}
+
+.card p {
+  margin-bottom: 0.8rem;
+}
+
+.card a {
+  text-decoration: none;
+}
